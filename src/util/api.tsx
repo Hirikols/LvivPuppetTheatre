@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: `http://localhost:5000/api/`,
+  baseURL: `http://10.26.0.236:5000/api/`,
 });
