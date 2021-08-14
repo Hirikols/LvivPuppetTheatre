@@ -1,7 +1,7 @@
 FROM node:8-alpine as builder
 WORKDIR /usr/src/app
 COPY . .
-RUN npm install --production
+RUN npm install 
 RUN npm run build
 
 FROM node:8-alpine
