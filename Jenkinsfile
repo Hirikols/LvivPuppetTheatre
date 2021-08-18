@@ -3,6 +3,8 @@ pipeline {
 
     stages {
         stage('Build') {
+            
+            
             steps{
                 sh '''
                 docker build -t latest .
@@ -11,8 +13,12 @@ pipeline {
             }
         }
         stage('Test') {
+            agent{
+                docker {image 'node:8-alpine'}
+            }
             steps{
-                echo 'Test..'
+                sh 'npm install'
+                sh 'npm test --watchAll=false'
             }
         }
         stage('Deploy'){
