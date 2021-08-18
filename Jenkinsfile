@@ -1,28 +1,41 @@
-pipeline {
-    agent none
+// pipeline {
+//     agent none
 
-    stages {
-        stage('Build') {
-            agent {
-                dockerfile true
-            }
+//     stages {
+//         stage('Build') {
+//             agent {
+//                 dockerfile true
+//             }
             
-            steps{     
-                 
-            }
-        }
+//             steps{     
+
+//             }
+//         }
+//         stage('Test') {
+//             agent{
+//                 docker {image 'node:8-alpine'}
+//             }
+//             steps{
+//                 sh 'npm install'
+//                 sh 'npm test --watchAll=false'
+//             }
+//         }
+//         stage('Deploy'){
+//             steps{
+//                 echo 'Deploy'
+//             }
+//         }
+//     }
+// }
+
+pipeline {
+    agent {
+        docker { image 'node:14-alpine' }
+    }
+    stages {
         stage('Test') {
-            agent{
-                docker {image 'node:8-alpine'}
-            }
-            steps{
-                sh 'npm install'
-                sh 'npm test --watchAll=false'
-            }
-        }
-        stage('Deploy'){
-            steps{
-                echo 'Deploy'
+            steps {
+                sh 'node --version'
             }
         }
     }
