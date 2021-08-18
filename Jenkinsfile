@@ -4,7 +4,10 @@ pipeline {
     stages {
         stage('Build') {
             steps{
-                echo 'Build..'
+                sh '''
+                docker build -t latest .
+                '''
+                
             }
         }
         stage('Test') {
