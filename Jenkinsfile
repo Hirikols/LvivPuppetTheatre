@@ -1,15 +1,14 @@
 pipeline {
-    agent any
+    agent none
 
     stages {
         stage('Build') {
+            agent {
+                dockerfile true
+            }
             
-            
-            steps{
-                sh '''
-                docker build -t latest .
-                '''
-                
+            steps{     
+                 
             }
         }
         stage('Test') {
