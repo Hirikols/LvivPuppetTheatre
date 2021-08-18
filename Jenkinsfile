@@ -15,6 +15,9 @@ pipeline {
             agent{
                 docker {image 'node:8-alpine'}
             }
+              environment {
+                HOME = '.'
+            }
             steps{
                 sh 'npm install'
                 sh 'npm test --watchAll=false'
