@@ -1,14 +1,17 @@
 pipeline {
     agent any
 
+    environment {
+        scannerHome = tool 'sonar-scanner'
+    }
 
     stages{
-        // stage('Compile Front'){
-        //     steps{
-        //         sh "npm install"
-        //         sh "npm run build"
-        //     }
-        // }
+        stage('Compile Front'){
+            steps{
+                sh "npm install"
+                sh "npm run build"
+            }
+        }
         // stage('Run tests'){
         //     steps{
         //         sh "npm test"
@@ -16,18 +19,17 @@ pipeline {
         // }
         stage('SonarQube'){
             steps{
-                def scannerHome = tool 'SonarScanner 4.0';
                 withSonarQubeEnv('Sonar'){
-                    sh "${scannerHome}/bin/sonar-scanner"
+                    sh "${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.projectKey=Theare \
+                    -Dsonar.sources=. "
                 }
             }
         }
-
-
-
+        stage('Quality gate'){
+            steps{
+                waitForQualityGate abortPipeline: true
+            }
+        }
     }
-
-
-
-
 }
