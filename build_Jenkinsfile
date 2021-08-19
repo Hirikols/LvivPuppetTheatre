@@ -32,4 +32,13 @@ pipeline {
             }
         }
     }
+    post{
+        always{
+            cleanWs()
+        }
+        success{
+            //build next pipeline
+            echo 'nice!'
+        }
+    }
 }
