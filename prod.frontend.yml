@@ -3,9 +3,7 @@ version: "3.9"
 services:
   front:
     container_name: frontend
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: registry.hiriko.local:5000/front:${TAG_FRONT}
     ports:
       - "3000:3000"
 
