@@ -1,44 +1,54 @@
-pipeline {
+pipeline{
     agent any
-
-    environment {
-        scannerHome = tool 'sonar-scanner'
-    }
-
-    stages{
-        stage('Compile Front'){
+options {
+    disableConcurrentBuilds()
+    buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5'))
+}
+   stages{
+        stage('Pull base images'){
+            options{
+                timeout( time: 5 , unit: 'MINUTES')
+            }
             steps{
-                sh "npm install"
-                sh "npm run build"
+                sh 'docker pull registry.hiriko.local:5000/node:8-alpine'
             }
         }
-        // stage('Run tests'){
-        //     steps{
-        //         sh "npm test"
-        //     }
-        // }
-        stage('SonarQube'){
+        stage('Build images'){
+            options{
+                timeout(time: 5 , unit: 'MINUTES')
+            }
             steps{
-                withSonarQubeEnv('Sonar'){
-                    sh "${scannerHome}/bin/sonar-scanner \
-                    -Dsonar.projectKey=Theare \
-                    -Dsonar.sources=. "
-                }
+                sh 'docker-compose -f dev.front.yml build'
             }
         }
-        stage('Quality gate'){
+        stage('Run Containers'){
+            options{
+                timeout(time: 5 , unit: 'MINUTES')
+            }
             steps{
-                waitForQualityGate abortPipeline: true
+                sh 'docker-compose -f dev.front.yml up -d'
+            }
+        }
+        stage('Test service'){
+            options{
+                timeout( time: 2 , unit: "MINUTES")
+            }
+            steps{
+                sh 'bash check_service.sh'
             }
         }
     }
     post{
         always{
             cleanWs()
+            sh 'docker stop $(docker ps -aq) '
+            sh 'docker rm $(docker ps -aq) '
+            sh 'docker network prune -f'
+            sh 'docker image rm $(docker image ls -q) -f'
         }
-        success{
-            //build next pipeline
-            echo 'nice!'
+        aborted {
+            //slackSend 
+            echo 'bad'
         }
     }
 }

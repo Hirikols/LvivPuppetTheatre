@@ -1,0 +1,81 @@
+pipeline {
+    agent any
+options {
+    disableConcurrentBuilds()
+    buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5'))
+}   
+    environment {
+        scannerHome = tool 'sonar-scanner'
+    }
+
+    stages{
+        stage('Compile Front'){
+            agent {
+                docker{
+                    image 'registry.hiriko.local:5000/node:8-alpine '
+                }
+            }
+            options{
+                timeout(time 5, unit: "MINUTES")
+            }
+            steps{
+                sh "npm install"
+                sh "npm run build"
+            }
+        }
+        // stage('Run tests'){
+        //     agent {
+        //         docker{
+        //             image 'registry.hiriko.local:5000/node:8-alpine '
+        //         }
+        //     }
+        //     options{
+        //         timeout(time 5, unit: "MINUTES")
+        //     }
+        //     steps{
+        //          sh "npm install"
+        //          sh "npm test"
+        //     }
+        // }
+        stage('SonarQube'){
+            options{
+                timeout(time: 5, unit: 'MINUTES')
+                retry(2)
+            }
+            steps{
+                withSonarQubeEnv('Sonar'){
+                    sh "${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.projectKey=FrontTheare \
+                    -Dsonar.sources=. "
+                }
+            }
+        }
+        stage('Quality gate') {
+             options{
+                 timeout(time: 1 , unit : 'MINUTES')
+                 retry(2)
+            }
+            steps {
+                script{
+                    qualitygate = waitForQualityGate()
+                    if (qualitygate.status != "OK") {
+                        currentBuild.result = "FAILURE"
+                        // slackSend
+                    }    
+                }
+            }
+        }
+    }
+    post{
+        always{
+            cleanWs()
+        }
+        success{
+            build job: 'Front_Build'
+        }
+         aborted{
+            //slackSend
+            echo 'bad'
+        }
+    }
+}
