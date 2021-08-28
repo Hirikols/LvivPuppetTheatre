@@ -49,6 +49,9 @@ options {
         aborted {
             slackSend color: "danger", message: "Build aborted: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
         }
+        failed{
+            slackSend color: "danger", message: "Build failed: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+        }
         success{
             slackSend color: "good", message: "Build finished: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
         }
