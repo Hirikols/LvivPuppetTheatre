@@ -16,7 +16,7 @@ options {
                 }
             }
             options{
-                timeout(time 5, unit: "MINUTES")
+                timeout(time: 5, unit: "MINUTES")
             }
             steps{
                 sh "npm install"
@@ -71,7 +71,7 @@ options {
             cleanWs()
         }
         success{
-            build job: 'Front_Build'
+            build job: 'Front_Build' , propagate: false
         }
          aborted{
             //slackSend
