@@ -38,7 +38,7 @@ options {
             echo 'bad'
         }
          success{
-            build job: 'Deploy_Back' , parameters: [string(name: 'TAG_FRONT', value: "${env.BUILD_NUMBER}")] , propagate: true
+            build job: 'Deploy_Front' , parameters: [string(name: 'TAG_FRONT', value: "${env.BUILD_NUMBER}")] , propagate: true
         }
     }
 }
