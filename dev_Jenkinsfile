@@ -66,10 +66,10 @@ options {
             build job: 'Front_Build' , propagate: false
         }
         failure{
-            slackSend color: "danger", message: "Build failed: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+            slackSend  (channel: '#builds' , color: "#F01717", message: "Build failed: ${env.JOB_NAME} ${env.BUILD_NUMBER}")
         }
          aborted{
-            slackSend color: "danger", message: "Build aborted: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+            slackSend (channel: '#builds' , color: "#F01717", message: "Build aborted: ${env.JOB_NAME} ${env.BUILD_NUMBER}")
         }
     }
 }
