@@ -52,7 +52,7 @@ options {
                     qualitygate = waitForQualityGate()
                     if (qualitygate.status != "OK") {
                         currentBuild.result = "FAILURE"
-                        slackSend color: "danger", message: "Quality Gate Failed "
+                        slackSend color: "#f5330c", message: "Quality Gate Failed "
                     }    
                 }
             }
@@ -66,10 +66,10 @@ options {
             build job: 'Front_Build' , propagate: false
         }
         failure{
-            slackSend  (channel: '#builds' , color: "#F01717", message: "Build failed: ${env.JOB_NAME} ${env.BUILD_NUMBER}")
+            slackSend  (channel: '#builds' , color: "#f5330c", message: "Build failed: ${env.JOB_NAME} ${env.BUILD_NUMBER}")
         }
          aborted{
-            slackSend (channel: '#builds' , color: "#F01717", message: "Build aborted: ${env.JOB_NAME} ${env.BUILD_NUMBER}")
+            slackSend (channel: '#builds' , color: "#f0f5f5", message: "Build aborted: ${env.JOB_NAME} ${env.BUILD_NUMBER}")
         }
     }
 }
