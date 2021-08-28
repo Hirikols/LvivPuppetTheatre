@@ -23,7 +23,7 @@ options {
         }
         stage('Push images to registry'){
             steps{
-                sh 'docker tag ci_front_front:latest registry.hiriko.local:5000/front:${BUILD_NUMBER}'
+                sh 'docker tag front_ci_front:latest registry.hiriko.local:5000/front:${BUILD_NUMBER}'
                 sh 'docker push registry.hiriko.local:5000/front:${BUILD_NUMBER}'
             }
         }
