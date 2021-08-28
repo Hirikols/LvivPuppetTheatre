@@ -1,0 +1,44 @@
+pipeline{
+    agent any
+options {
+    disableConcurrentBuilds()
+    buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5'))
+}
+   stages{
+        stage('Pull base images'){
+            options{
+                timeout( time: 5 , unit: 'MINUTES')
+            }
+            steps{
+                sh 'docker pull registry.hiriko.local:5000/node:8-alpine'
+            }
+        }
+        stage('Build images'){
+            options{
+                timeout(time: 5 , unit: 'MINUTES')
+            }
+            steps{
+                sh 'docker-compose -f dev.frontend.yml build'
+            }
+        }
+        stage('Push images to registry'){
+            steps{
+                sh 'docker tag ci_front_front:latest registry.hiriko.local:5000/front:${BUILD_NUMBER}'
+                sh 'docker push registry.hiriko.local:5000/front:${BUILD_NUMBER}'
+            }
+        }
+    }
+    post{
+        always{
+            cleanWs()
+            sh 'docker image rm $(docker image ls -q) -f'  
+        }
+        aborted {
+            //slackSend 
+            echo 'bad'
+        }
+         success{
+            build job: 'Deploy_Back' , parameters: [string(name: 'TAG_FRONT', value: "${env.BUILD_NUMBER}")] , propagate: true
+        }
+    }
+}

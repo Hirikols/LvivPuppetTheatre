@@ -84,7 +84,7 @@ class Sidebar extends React.Component<ISidebarProps, ISidebarState> {
                     }
                     query.slice(query.length - 1, 1);
 
-                    await API.delete("http://10.26.0.156:5000/api/audio/unload/" + query);
+                    await API.delete("http://10.26.0.230:5000/api/audio/unload/" + query);
                   }
                 this.props.onChangeAudioUploadToInitial();
             }

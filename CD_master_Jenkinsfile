@@ -1,0 +1,50 @@
+pipeline{
+    agent { label 'Deploy'}
+options {
+    disableConcurrentBuilds()
+    buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5'))
+}
+parameters{
+    string(description: 'backend image version', name: 'TAG_FRONT')
+    }
+    stages{
+        stage('Pull image from registry') {
+            steps {
+                sh 'docker pull registry.hiriko.local:5000/front:${TAG_FRONT}'
+            }
+        }
+        stage('Stop running containers') {
+            steps {
+                sh 'docker container rm -f fronend'
+            }
+        }
+        stage('RUN SERVICES') {
+            steps {
+                sh 'docker-compose -f prod.frontend.yml up -d'
+            }
+        }
+        stage('Test service'){
+            options{
+                timeout( time: 2 , unit: "MINUTES")
+            }
+            steps{
+                sh 'bash check_service.sh'
+            }
+        }
+    }
+    post { 
+        always { 
+            cleanWs()
+        }
+        aborted {
+            //slackSend 
+            echo 'bad'
+            
+        }
+        success{
+            //slackSend
+            echo 'good'
+        }
+    }
+    
+}
