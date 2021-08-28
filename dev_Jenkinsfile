@@ -6,6 +6,7 @@ options {
 }   
     environment {
         scannerHome = tool 'sonar-scanner'
+        
     }
 
     stages{
@@ -18,11 +19,11 @@ options {
             }
         }
         stage('Compile Front'){
-            agent {
-                docker{
-                    image 'registry.hiriko.local:5000/node:8-alpine '
-                }
-            }
+            // agent {
+            //     docker{
+            //         image 'registry.hiriko.local:5000/node:8-alpine '
+            //     }
+            // }
             options{
                 timeout(time: 5, unit: "MINUTES")
             }
