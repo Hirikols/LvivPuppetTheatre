@@ -9,6 +9,11 @@ options {
     }
 
     stages{
+        stage('Pull base images'){
+            steps{
+                sh 'docker pull registry.hiriko.local:5000/node:8-alpine'
+            }
+        }
         stage('Compile Front'){
             agent {
                 docker{
