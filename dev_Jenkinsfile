@@ -10,20 +10,8 @@ options {
     }
 
     stages{
-        // stage('Pull base images'){
-        //     options{
-        //         timeout(time: 5, unit: "MINUTES")
-        //     }
-        //     steps{
-        //         sh 'docker pull registry.hiriko.local:5000/node:8-alpine'
-        //     }
-        // }
         stage('Compile Front'){
-            // agent {
-            //     docker{
-            //         image 'registry.hiriko.local:5000/node:8-alpine '
-            //     }
-            // }
+           
             options{
                 timeout(time: 5, unit: "MINUTES")
             }
@@ -33,11 +21,6 @@ options {
             }
         }
         // stage('Run tests'){
-        //     agent {
-        //         docker{
-        //             image 'registry.hiriko.local:5000/node:8-alpine '
-        //         }
-        //     }
         //     options{
         //         timeout(time 5, unit: "MINUTES")
         //     }
