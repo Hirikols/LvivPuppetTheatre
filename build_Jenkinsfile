@@ -47,8 +47,10 @@ options {
             sh 'docker image rm $(docker image ls -q) -f'
         }
         aborted {
-            //slackSend 
-            echo 'bad'
+            slackSend color: "danger", message: "Build aborted: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+        }
+        success{
+            slackSend color: "good", message: "Build finished: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
         }
     }
 }
