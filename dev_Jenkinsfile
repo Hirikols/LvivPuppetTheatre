@@ -10,6 +10,9 @@ options {
 
     stages{
         stage('Pull base images'){
+            options{
+                timeout(time: 5, unit: "MINUTES")
+            }
             steps{
                 sh 'docker pull registry.hiriko.local:5000/node:8-alpine'
             }
