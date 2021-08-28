@@ -15,7 +15,7 @@ parameters{
         }
         stage('Stop running containers') {
             steps {
-                sh 'docker container rm -f fronend'
+                sh 'docker container rm -f frontend'
             }
         }
         stage('RUN SERVICES') {
