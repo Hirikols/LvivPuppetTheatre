@@ -84,7 +84,7 @@ class PerformanceList extends Component<IPerformanceProps, IPerformanceState> {
             return alert("Ви намагаєтесь завантажити не аудіо файл");            
         }        
 
-        await API.post("audio/upload/waiting", formData, {
+        await API.post("http://10.26.0.230:5000/api/audio/upload/waiting", formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
 
