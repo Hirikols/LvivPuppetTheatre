@@ -20,15 +20,15 @@ options {
                 sh "npm run build"
             }
         }
-        stage('Run tests'){
-            options{
-                timeout(time 5, unit: "MINUTES")
-            }
-            steps{
-                 sh "npm install"
-                 sh "npm test"
-            }
-        }
+        // stage('Run tests'){
+        //     options{
+        //         timeout(time 5, unit: "MINUTES")
+        //     }
+        //     steps{
+        //          sh "npm install"
+        //          sh "npm test"
+        //     }
+        // }
         stage('SonarQube'){
             options{
                 timeout(time: 5, unit: 'MINUTES')
